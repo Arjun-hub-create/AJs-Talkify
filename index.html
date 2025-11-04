@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJ'S WAVE - Real-time Chat</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="wave-container">
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <h1>AJ'S WAVE</h1>
+            <p>Connecting you to the world...</p>
+        </div>
+    </div>
+
+    <!-- Auth Container -->
+    <div id="auth-container" class="auth-container hidden">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="logo">
+                    <i class="fas fa-wave-square"></i>
+                    <h1>AJ'S WAVE</h1>
+                </div>
+                <p>Connect with people around the world</p>
+            </div>
+
+            <div class="auth-tabs">
+                <button class="tab-btn active" data-tab="login">Login</button>
+                <button class="tab-btn" data-tab="signup">Sign Up</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form active">
+                <div class="input-group">
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="login-email" placeholder="Email Address" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="login-password" placeholder="Password" required>
+                        <button type="button" class="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="auth-btn">
+                    <span>Login to Chat</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="#" class="switch-tab" data-tab="signup">Sign up</a></p>
+                </div>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signup-form" class="auth-form">
+                <div class="input-group">
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="signup-username" placeholder="Username" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="signup-email" placeholder="Email Address" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="signup-password" placeholder="Password" required>
+                        <button type="button" class="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="signup-confirm-password" placeholder="Confirm Password" required>
+                        <button type="button" class="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="auth-btn">
+                    <span>Create Account</span>
+                    <i class="fas fa-user-plus"></i>
+                </button>
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="#" class="switch-tab" data-tab="login">Login</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div class="app-container hidden">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-wave-square"></i>
+                    <h1>AJ'S WAVE</h1>
+                </div>
+                <div class="user-info">
+                    <div class="user-profile">
+                        <div class="user-avatar" id="user-avatar">U</div>
+                        <span id="username-display">User</span>
+                    </div>
+                    <button id="theme-toggle" class="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button id="logout-btn" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <h2>Chat Rooms</h2>
+                    <button id="new-room-btn" class="new-room-btn">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <div class="room-list">
+                    <div class="room active" data-room="general">
+                        <i class="fas fa-hashtag"></i>
+                        <span>General</span>
+                    </div>
+                    <div class="room" data-room="tech">
+                        <i class="fas fa-code"></i>
+                        <span>Tech Talk</span>
+                    </div>
+                    <div class="room" data-room="gaming">
+                        <i class="fas fa-gamepad"></i>
+                        <span>Gaming</span>
+                    </div>
+                    <div class="room" data-room="music">
+                        <i class="fas fa-music"></i>
+                        <span>Music</span>
+                    </div>
+                </div>
+                <div class="online-users">
+                    <h3>Online Users <span id="online-count">(0)</span></h3>
+                    <div id="users-list" class="users-list">
+                        <!-- Users will be populated here -->
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Chat Area -->
+            <section class="chat-area">
+                <div class="chat-header">
+                    <div class="current-room">
+                        <i class="fas fa-hashtag"></i>
+                        <h2 id="current-room-name">General</h2>
+                    </div>
+                    <div class="room-info">
+                        <span id="room-user-count">0 users in room</span>
+                    </div>
+                </div>
+
+                <div class="messages-container">
+                    <div id="messages" class="messages">
+                        <!-- Messages will be populated here -->
+                        <div class="welcome-message">
+                            <div class="welcome-icon">
+                                <i class="fas fa-comment-wave"></i>
+                            </div>
+                            <h3>Welcome to AJ'S WAVE</h3>
+                            <p>Start chatting with people around the world in real-time!</p>
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="message-input-container">
+    <form id="message-form" class="message-form">
+        <div class="input-wrapper">
+            <div class="message-actions">
+                <button type="button" class="action-btn" id="emoji-btn" title="Emoji">
+                    <i class="far fa-smile"></i>
+                </button>
+                <button type="button" class="action-btn" id="file-btn" title="Send File">
+                    <i class="fas fa-paperclip"></i>
+                </button>
+                <button type="button" class="action-btn" id="voice-btn" title="Voice Message">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button type="button" class="action-btn" id="video-call-btn" title="Video Call">
+                    <i class="fas fa-video"></i>
+                </button>
+            </div>
+            <input type="text" id="message-input" placeholder="Type your message..." autocomplete="off">
+            <button type="submit" class="send-btn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </form>
+</div>
+            </section>
+        </main>
+    </div>
+
+    <!-- New Room Modal -->
+    <div id="new-room-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Room</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="new-room-form" class="modal-form">
+                <div class="input-group">
+                    <input type="text" id="room-name" placeholder="Room name" required>
+                </div>
+                <div class="input-group">
+                    <textarea id="room-description" placeholder="Room description (optional)" rows="3"></textarea>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <span>Create Room</span>
+                    <i class="fas fa-plus"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/client.js"></script>
+
+    <!-- Add these new modals before the closing body tag -->
+    <!-- File Sharing Modal -->
+    <div id="file-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Share File</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="file-upload-area" id="file-upload-area">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Drag & drop files here or click to browse</p>
+                    <input type="file" id="file-input" multiple style="display: none;">
+                </div>
+                <div id="file-preview" class="file-preview hidden"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancel-file">Cancel</button>
+                <button class="btn-primary" id="send-file" disabled>Send File</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voice Message Modal -->
+    <div id="voice-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Record Voice Message</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="voice-recorder">
+                    <div class="voice-visualizer" id="voice-visualizer">
+                        <div class="voice-bar"></div>
+                        <div class="voice-bar"></div>
+                        <div class="voice-bar"></div>
+                        <div class="voice-bar"></div>
+                        <div class="voice-bar"></div>
+                    </div>
+                    <div class="voice-timer" id="voice-timer">00:00</div>
+                    <button class="voice-btn record-btn" id="record-btn">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button class="voice-btn stop-btn hidden" id="stop-btn">
+                        <i class="fas fa-stop"></i>
+                    </button>
+                    <button class="voice-btn play-btn hidden" id="play-btn">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancel-voice">Cancel</button>
+                <button class="btn-primary" id="send-voice" disabled>Send Voice</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Call Modal -->
+    <div id="video-call-modal" class="modal hidden">
+        <div class="modal-content video-call-modal">
+            <div class="modal-header">
+                <h2>Video Call</h2>
+                <div class="call-controls">
+                    <button class="call-btn hangup-btn" id="hangup-btn">
+                        <i class="fas fa-phone-slash"></i>
+                    </button>
+                    <button class="call-btn mute-btn" id="mute-btn">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button class="call-btn video-btn" id="video-btn">
+                        <i class="fas fa-video"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="video-container">
+                    <video id="local-video" autoplay muted></video>
+                    <video id="remote-video" autoplay></video>
+                    <div class="call-status" id="call-status">Connecting...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emoji Picker -->
+    <div id="emoji-picker" class="emoji-picker hidden">
+        <div class="emoji-categories">
+            <button class="emoji-category active" data-category="smileys">😀</button>
+            <button class="emoji-category" data-category="people">👋</button>
+            <button class="emoji-category" data-category="nature">🐶</button>
+            <button class="emoji-category" data-category="food">🍕</button>
+            <button class="emoji-category" data-category="activities">⚽</button>
+        </div>
+        <div class="emoji-grid" id="emoji-grid">
+            <!-- Emojis will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Enhanced Attachment Menu -->
+<div id="attachment-menu" class="attachment-menu hidden">
+    <div class="attachment-options">
+        <div class="attachment-option" data-type="image">
+            <div class="attachment-icon">
+                <i class="fas fa-image"></i>
+            </div>
+            <span>Photo & Video</span>
+        </div>
+        <div class="attachment-option" data-type="document">
+            <div class="attachment-icon">
+                <i class="fas fa-file"></i>
+            </div>
+            <span>Document</span>
+        </div>
+        <div class="attachment-option" data-type="camera">
+            <div class="attachment-icon">
+                <i class="fas fa-camera"></i>
+            </div>
+            <span>Camera</span>
+        </div>
+        <div class="attachment-option" data-type="contact">
+            <div class="attachment-icon">
+                <i class="fas fa-user"></i>
+            </div>
+            <span>Contact</span>
+        </div>
+        <div class="attachment-option" data-type="poll">
+            <div class="attachment-icon">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <span>Poll</span>
+        </div>
+        <div class="attachment-option" data-type="location">
+            <div class="attachment-icon">
+                <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <span>Location</span>
+        </div>
+    </div>
+</div>
+
+<!-- Image Preview Modal -->
+<div id="image-preview-modal" class="modal hidden">
+    <div class="modal-content image-preview-modal">
+        <div class="modal-header">
+            <h2>Send Image</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="image-preview-container">
+                <img id="image-preview" src="" alt="Preview">
+                <div class="image-actions">
+                    <button class="btn-secondary" id="cancel-image">Cancel</button>
+                    <button class="btn-primary" id="send-image">Send Image</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Camera Modal -->
+<div id="camera-modal" class="modal hidden">
+    <div class="modal-content camera-modal">
+        <div class="modal-header">
+            <h2>Take Photo</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="camera-container">
+                <video id="camera-view" autoplay playsinline></video>
+                <canvas id="camera-canvas" class="hidden"></canvas>
+                <div class="camera-controls">
+                    <button class="camera-btn capture-btn" id="capture-btn">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                    <button class="camera-btn retake-btn hidden" id="retake-btn">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Share Modal -->
+<div id="contact-modal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Share Contact</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="contact-list">
+                <div class="contact-item">
+                    <div class="contact-avatar">A</div>
+                    <div class="contact-info">
+                        <div class="contact-name">Alex Johnson</div>
+                        <div class="contact-phone">+1 234 567 8900</div>
+                    </div>
+                    <button class="share-contact-btn" data-contact="alex">Share</button>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-avatar">S</div>
+                    <div class="contact-info">
+                        <div class="contact-name">Sarah Wilson</div>
+                        <div class="contact-phone">+1 234 567 8901</div>
+                    </div>
+                    <button class="share-contact-btn" data-contact="sarah">Share</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Poll Creation Modal -->
+<div id="poll-modal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Create Poll</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="poll-form">
+                <input type="text" id="poll-question" placeholder="Ask a question" class="poll-input">
+                <div id="poll-options">
+                    <input type="text" class="poll-option" placeholder="Option 1">
+                    <input type="text" class="poll-option" placeholder="Option 2">
+                </div>
+                <button class="add-option-btn" id="add-option-btn">
+                    <i class="fas fa-plus"></i> Add Option
+                </button>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" id="cancel-poll">Cancel</button>
+            <button class="btn-primary" id="create-poll">Create Poll</button>
+        </div>
+    </div>
+</div>
+
+<!-- Location Share Modal -->
+<div id="location-modal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Share Location</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="location-options">
+                <button class="location-option" id="share-live-location">
+                    <i class="fas fa-satellite"></i>
+                    <span>Share Live Location</span>
+                </button>
+                <button class="location-option" id="share-current-location">
+                    <i class="fas fa-map-pin"></i>
+                    <span>Share Current Location</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Message Status Indicators -->
+<div class="message-status-tooltip hidden" id="message-status-tooltip">
+    <div class="tooltip-content">
+        <div class="status-item">
+            <span>Delivered</span>
+            <span class="status-time">10:30 AM</span>
+        </div>
+        <div class="status-item">
+            <span>Read</span>
+            <span class="status-time">10:31 AM</span>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
